@@ -1,16 +1,23 @@
-mongo:
-  image: mongo
-  ports:
-    - "27017:27017"
-  volumes:
-    - "./data:/data/db"
+version: '3.7'
 
-web:
-  image: mongo-express
-  ports:
-    - "8081:8081"
-  links:
-    - "mongo:mongo"
-  environment:
-    - "ME_CONFIG_BASICAUTH_USERNAME=admin"
-    - "ME_CONFIG_BASICAUTH_PASSWORD=admin123"
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  web:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - "ME_CONFIG_BASICAUTH_USERNAME=admin"
+      - "ME_CONFIG_BASICAUTH_PASSWORD=admin"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
